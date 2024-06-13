@@ -22,15 +22,16 @@ except KeyError:
     exit("Please set your Steam API key to the env var 'STEAM_API_KEY'")
 
 # Get game data
-print(f"\n{border}")
-game_search_results = sgdb.search_game('A Virus Named TOM')
-for game in game_search_results:
-    print(json.dumps(game.to_json(), indent=4))
+#print(f"\n{border}")
+#game_search_results = sgdb.search_game('A Virus Named TOM')
+#for game in game_search_results:
+#    print(json.dumps(game.to_json(), indent=4))
 
 # By game ID
 print(f"\n{border}")
 game_data = sgdb.get_game_by_steam_appid(207650)
-print(json.dumps(game_data.to_json(), indent=4))
+game_data_json = game_data.to_json()
+print(game_data_json)
 
 # Get games in users library to interate through
 users = steam_helpers.get_steam_users()
@@ -46,10 +47,17 @@ if not steam_helpers.get_library_folders():
 print(steam_helpers.get_library_folders())
 
 # Parse usr games from profile
-users = steam_helpers.get_steam_users()
-for user in users:
-    user_id = user['username']
-    steam_id = user['steam_id']
-    print(steam_helpers.fetch_and_parse_games_xml(steam_id))
+# Skip this for testing unless needed to reduce calls
+#users = steam_helpers.get_steam_users()
+#for user in users:
+#    user_id = user['username']
+#    steam_id = user['steam_id']
+#    print(steam_helpers.fetch_and_parse_games_xml(steam_id))
+
+print("Testing grid stuff")
+grids = []
+grids = sgdb.get_grids_by_gameid([game_data_json["id"]])
+for grid in grids:
+    print(json.dumps(grid.to_json(), indent=4))
 
 print("DONE!")
