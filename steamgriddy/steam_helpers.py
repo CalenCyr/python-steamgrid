@@ -1,5 +1,6 @@
 import os
 import platform
+import vdf
 
 def get_steam_installation():
     # Check if the STEAM environment variable is set
