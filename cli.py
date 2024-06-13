@@ -38,3 +38,11 @@ if len(users) > 1:
     exit("Multiple Steam users found on this system, please set --steam-user <NAME>")
 
 print(users)
+
+# Get library folders
+print("Trying to get library folders from VDF")
+if not steam_helpers.get_library_folders():
+    exit("Failed to find library folders!")
+print(steam_helpers.get_library_folders())
+
+print("DONE!")

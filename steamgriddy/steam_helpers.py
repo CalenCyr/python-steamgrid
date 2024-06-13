@@ -6,7 +6,7 @@ import vdf
 profile_permalink_format = "http://steamcommunity.com/profiles/%v/games?xml=1"
 
 # Used to convert between SteamId32 and SteamId64.
-const id_conversion_constant = "0x110000100000000"
+id_conversion_constant = "0x110000100000000"
 
 def get_steam_installation():
     # Check if the STEAM environment variable is set
@@ -122,3 +122,5 @@ def get_library_folders():
             path = value.get('path')
             if path:
                 library_folders.append(os.path.join(path, "steamapps"))
+
+    return library_folders
