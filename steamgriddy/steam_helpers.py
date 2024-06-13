@@ -51,12 +51,12 @@ def get_steam_users():
         raise IOError(f"Failed to read config.vdf: {e}")
 
     users = []
-    user_data = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('Users', {})
+    user_data = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('Accounts', {})
     
-    for steam_id, data in user_data.items():
-        user_name = data.get('PersonaName')
-        if user_name:
-            users.append({'user_name': user_name, 'steam_id': steam_id})
+    for steam_username, data in user_data.items():
+        steam_id = data.get('SteamID')
+        if steam_username:
+            users.append({'user_name': steam_username, 'steam_id': steam_id})
     
     return users
 
