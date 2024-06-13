@@ -28,9 +28,3 @@ def get_steam_installation():
     # If no installation path is found
     raise FileNotFoundError("Could not find Steam installation")
 
-# Example usage
-try:
-    steam_installation_path = get_steam_installation()
-    print("Steam installation found at:", steam_installation_path)
-except Exception as e:
-    print(e)
