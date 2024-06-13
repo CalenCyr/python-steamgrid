@@ -7,14 +7,6 @@ from steamgriddy import SteamGridDB
 from steamgriddy import steam_helpers
 from steamgriddy import enums
 
-# TODO
-#   Add args
-#   Add config (to hold API string with 400 user permissions)
-#   Add Steam...
-#       login
-#       game parsing
-#       data collection for current titles
-
 # TESTING ONLY
 border = '=' * 80
 try:
