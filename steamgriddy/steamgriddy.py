@@ -120,6 +120,7 @@ class SteamGridDB:
     def get_grids_by_gameid(
         self,
         game_ids: List[int],
+        dimensions: List[str] = [],
         styles: List[StyleType] = [],
         mimes: List[MimeType] = [],
         types: List[ImageType] = [],
@@ -134,6 +135,8 @@ class SteamGridDB:
             The game ids of the games.
         styles: List[:class:`StyleType`]
             The styles of the grids. Defaults to all styles.
+        dimensions: List[:class:`str`]
+            The size of the grids. Defaults to 600x900.
         mimes: List[:class:`MimeType`]
             The mimes of the grids. Defaults to all mimes.
         types: List[:class:`ImageType`]
@@ -159,6 +162,8 @@ class SteamGridDB:
             raise TypeError('\'game_ids\' must be a list of integers.')
         if not isinstance(styles, List):
             raise TypeError('\'styles\' must be a list of StyleType.')
+        if not isinstance(dimensions, List):
+            raise TypeError('\'dimensions\' must be a list of str.')
         if not isinstance(mimes, List):
             raise TypeError('\'mimes\' must be a list of MimeType.')
         if not isinstance(types, List):
@@ -170,6 +175,7 @@ class SteamGridDB:
     
         queries = {
             'styles': ','.join(i.value for i in styles),
+            'dimensions': ','.join(str(i) for i in dimensions),
             'mimes': ','.join(i.value for i in mimes),
             'types': ','.join(i.value for i in types),
             'nsfw': str(is_nsfw).lower(),
@@ -185,6 +191,7 @@ class SteamGridDB:
         game_ids: List[int],
         platform: PlatformType,
         styles: List[StyleType] = [],
+        dimensions: List[str] = [],
         mimes: List[MimeType] = [],
         types: List[ImageType] = [],
         is_nsfw: bool = False,
@@ -201,6 +208,8 @@ class SteamGridDB:
             The platform type of the grids.
         styles: List[:class:`StyleType`]
             The styles of the grids. Defaults to all styles.
+        dimensions: List[:class:`str`]
+            The size of the grids. Defaults to 600x900.
         mimes: List[:class:`MimeType`]
             The mimes of the grids. Defaults to all mimes.
         types: List[:class:`ImageType`]
@@ -228,6 +237,8 @@ class SteamGridDB:
             raise TypeError('\'platform\' must be a PlatformType.')
         if not isinstance(styles, List):
             raise TypeError('\'styles\' must be a list of StyleType.')
+        if not isinstance(dimensions, List):
+            raise TypeError('\'dimensions\' must be a list of str.')
         if not isinstance(mimes, List):
             raise TypeError('\'mimes\' must be a list of MimeType.')
         if not isinstance(types, List):
@@ -239,6 +250,7 @@ class SteamGridDB:
 
         queries = {
             'styles': ','.join(str(i) for i in styles),
+            'dimensions': ','.join(str(i) for i in dimensions),
             'mimes': ','.join(str(i) for i in mimes),
             'types': ','.join(str(i) for i in types),
             'nsfw': str(is_nsfw).lower(),
@@ -259,6 +271,7 @@ class SteamGridDB:
         self,
         game_ids: List[int],
         styles: List[StyleType] = [],
+        dimensions: List[str] = [],
         mimes: List[MimeType] = [],
         types: List[ImageType] = [],
         is_nsfw: bool = False,
@@ -272,6 +285,8 @@ class SteamGridDB:
             The game ids of the games.
         styles: List[:class:`StyleType`]
             The styles of the heroes. Defaults to all styles.
+        dimensions: List[:class:`str`]
+            The size of the grids. Defaults to 600x900.
         mimes: List[:class:`MimeType`]
             The mimes of the heroes. Defaults to all mimes.
         types: List[:class:`ImageType`]
@@ -297,6 +312,8 @@ class SteamGridDB:
             raise TypeError('\'game_ids\' must be a list of integers.')
         if not isinstance(styles, List):
             raise TypeError('\'styles\' must be a list of StyleType.')
+        if not isinstance(dimensions, List):
+            raise TypeError('\'dimensions\' must be a list of str.')
         if not isinstance(mimes, List):
             raise TypeError('\'mimes\' must be a list of MimeType.')
         if not isinstance(types, List):
@@ -308,6 +325,7 @@ class SteamGridDB:
 
         queries = {
             'styles': ','.join(i.value for i in styles),
+            'dimensions': ','.join(str(i) for i in dimensions),
             'mimes': ','.join(i.value for i in mimes),
             'types': ','.join(i.value for i in types),
             'nsfw': str(is_nsfw).lower(),
@@ -324,6 +342,7 @@ class SteamGridDB:
         game_ids: List[int],
         platform: PlatformType,
         styles: List[StyleType] = [],
+        dimeions: List[str] = [],
         mimes: List[MimeType] = [],
         types: List[ImageType] = [],
         is_nsfw: bool = False,
@@ -339,6 +358,8 @@ class SteamGridDB:
             The platform type of the heroes.
         styles: List[:class:`StyleType`]
             The styles of the heroes. Defaults to all styles.
+        dimensions: List[:class:`str`]
+            The size of the grids. Defaults to 600x900.
         mimes: List[:class:`MimeType`] 
             The mimes of the heroes. Defaults to all mimes.
         types: List[:class:`ImageType`]
@@ -366,6 +387,8 @@ class SteamGridDB:
             raise TypeError('\'platform\' must be a PlatformType.')
         if not isinstance(styles, List):
             raise TypeError('\'styles\' must be a list of StyleType.')
+        if not isinstance(dimensions, List):
+            raise TypeError('\'dimensions\' must be a list of str.')
         if not isinstance(mimes, List):
             raise TypeError('\'mimes\' must be a list of MimeType.')
         if not isinstance(types, List):
@@ -377,6 +400,7 @@ class SteamGridDB:
 
         queries = {
             'styles': ','.join(str(i) for i in styles),
+            'dimensions': ','.join(str(i) for i in dimensions),
             'mimes': ','.join(str(i) for i in mimes),
             'types': ','.join(str(i) for i in types),
             'nsfw': str(is_nsfw).lower(),
@@ -397,6 +421,7 @@ class SteamGridDB:
         self,
         game_ids: List[int],
         styles: List[StyleType] = [],
+        dimensions: List[str] = [],
         mimes: List[MimeType] = [],
         types: List[ImageType] = [],
         is_nsfw: bool = False,
@@ -410,6 +435,8 @@ class SteamGridDB:
             The game ids of the games.
         styles: List[:class:`StyleType`]
             The styles of the logos. Defaults to all styles.
+        dimensions: List[:class:`str`]
+            The size of the grids. Defaults to 600x900.
         mimes: List[:class:`MimeType`]
             The mimes of the logos. Defaults to all mimes.
         types: List[:class:`ImageType`]
@@ -435,6 +462,8 @@ class SteamGridDB:
             raise TypeError('\'game_ids\' must be a list of integers.')
         if not isinstance(styles, List):
             raise TypeError('\'styles\' must be a list of StyleType.')
+        if not isinstance(dimensions, List):
+            raise TypeError('\'dimensions\' must be a list of str.')
         if not isinstance(mimes, List):
             raise TypeError('\'mimes\' must be a list of MimeType.')
         if not isinstance(types, List):
@@ -446,6 +475,7 @@ class SteamGridDB:
 
         queries = {
             'styles': ','.join(i.value for i in styles),
+            'dimensions': ','.join(str(i) for i in dimensions),
             'mimes': ','.join(i.value for i in mimes),
             'types': ','.join(i.value for i in types),
             'nsfw': str(is_nsfw).lower(),
@@ -462,6 +492,7 @@ class SteamGridDB:
         game_ids: List[int],
         platform: PlatformType,
         styles: List[StyleType] = [],
+        dimensions: List[str] = [],
         mimes: List[MimeType] = [],
         types: List[ImageType] = [],
         is_nsfw: bool = False,
@@ -477,6 +508,8 @@ class SteamGridDB:
             The platform type of the logos.
         styles: List[:class:`StyleType`]
             The styles of the logos. Defaults to all styles.
+        dimensions: List[:class:`str`]
+            The size of the grids. Defaults to 600x900.
         mimes: List[:class:`MimeType`]
             The mimes of the logos. Defaults to all mimes.
         types: List[:class:`ImageType`]
@@ -488,6 +521,8 @@ class SteamGridDB:
             raise TypeError('\'platform\' must be a PlatformType.')
         if not isinstance(styles, List):
             raise TypeError('\'styles\' must be a list of StyleType.')
+        if not isinstance(dimensions, List):
+            raise TypeError('\'dimensions\' must be a list of str.')
         if not isinstance(mimes, List):
             raise TypeError('\'mimes\' must be a list of MimeType.')
         if not isinstance(types, List):
@@ -499,6 +534,7 @@ class SteamGridDB:
 
         queries = {
             'styles': ','.join(str(i) for i in styles),
+            'dimensins': ','.join(str(i) for i in dimensions),
             'mimes': ','.join(str(i) for i in mimes),
             'types': ','.join(str(i) for i in types),
             'nsfw': str(is_nsfw).lower(),
@@ -519,6 +555,7 @@ class SteamGridDB:
         self,
         game_ids: List[int],
         styles: List[StyleType] = [],
+        dimensions: List[str] = [],
         mimes: List[MimeType] = [],
         types: List[ImageType] = [],
         is_nsfw: bool = False,
@@ -532,6 +569,8 @@ class SteamGridDB:
             The game ids of the games.
         styles: List[:class:`StyleType`]
             The styles of the icons. Defaults to all styles.
+        dimensions: List[:class:`str`]
+            The size of the grids. Defaults to 600x900.
         mimes: List[:class:`MimeType`]
             The mimes of the icons. Defaults to all mimes.
         types: List[:class:`ImageType`]
@@ -557,6 +596,8 @@ class SteamGridDB:
             raise TypeError('\'game_ids\' must be a list of integers.')
         if not isinstance(styles, List):
             raise TypeError('\'styles\' must be a list of StyleType.')
+        if not isinstance(dimensions, List):
+            raise TypeError('\'dimensions\' must be a list of str.')
         if not isinstance(mimes, List):
             raise TypeError('\'mimes\' must be a list of MimeType.')
         if not isinstance(types, List):
@@ -568,6 +609,7 @@ class SteamGridDB:
 
         queries = {
             'styles': ','.join(i.value for i in styles),
+            'dimensions': ','.join(str(i) for i in dimensions),
             'mimes': ','.join(i.value for i in mimes),
             'types': ','.join(i.value for i in types),
             'nsfw': str(is_nsfw).lower(),
@@ -584,6 +626,7 @@ class SteamGridDB:
         game_ids: List[int],
         platform: PlatformType,
         styles: List[StyleType] = [],
+        dimensions: List[str] = [],
         mimes: List[MimeType] = [],
         types: List[ImageType] = [],
         is_nsfw: bool = False,
@@ -599,6 +642,8 @@ class SteamGridDB:
             The platform type of the icons.
         styles: List[:class:`StyleType`]
             The styles of the icons. Defaults to all styles.
+        dimensions: List[:class:`str`]
+            The size of the grids. Defaults to 600x900.
         mimes: List[:class:`MimeType`]
             The mimes of the icons. Defaults to all mimes.
         types: List[:class:`ImageType`]
@@ -626,6 +671,8 @@ class SteamGridDB:
             raise TypeError('\'platform\' must be a PlatformType.')
         if not isinstance(styles, List):
             raise TypeError('\'styles\' must be a list of StyleType.')
+        if not isinstance(dimensions, List):
+            raise TypeError('\'dimensions\' must be a list of str.')
         if not isinstance(mimes, List):
             raise TypeError('\'mimes\' must be a list of MimeType.')
         if not isinstance(types, List):
@@ -637,6 +684,7 @@ class SteamGridDB:
 
         queries = {
             'styles': ','.join(str(i) for i in styles),
+            'dimensions': ','.join(str(i) for i in dimensions),
             'mimes': ','.join(str(i) for i in mimes),
             'types': ','.join(str(i) for i in types),
             'nsfw': str(is_nsfw).lower(),

@@ -5,6 +5,7 @@ import json
 
 from steamgriddy import SteamGridDB
 from steamgriddy import steam_helpers
+from steamgriddy import enums
 
 # TODO
 #   Add args
@@ -58,6 +59,7 @@ print(steam_helpers.get_library_folders())
 print("Testing grid stuff")
 grids = []
 grids = sgdb.get_grids_by_gameid([game_data_json["id"]])
+grids = sgdb.get_grids_by_gameid(game_ids = [game_data_json["id"]], dimensions = ["600x900"])
 for grid in grids:
     print(json.dumps(grid.to_json(), indent=4))
 
