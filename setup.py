@@ -14,7 +14,9 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/mdeguzis/python-steamgriddy",
     install_requires = [
-        'requests>=2.28.1'
+        'requests>=2.28.1',
+        'vdf',
+        'xmltodict'
     ]
     packages=setuptools.find_packages(),
     license="MIT",

@@ -58,7 +58,7 @@ def get_steam_users():
     for steam_username, data in user_data.items():
         steam_id = data.get('SteamID')
         if steam_username:
-            users.append({'user_name': steam_username, 'steam_id': steam_id})
+            users.append({'username': steam_username, 'steam_id': steam_id})
     
     return users
 

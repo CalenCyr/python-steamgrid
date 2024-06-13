@@ -45,4 +45,11 @@ if not steam_helpers.get_library_folders():
     exit("Failed to find library folders!")
 print(steam_helpers.get_library_folders())
 
+# Parse usr games from profile
+users = steam_helpers.get_steam_users()
+for user in users:
+    user_id = user['username']
+    steam_id = user['steam_id']
+    print(steam_helpers.fetch_and_parse_games_xml(steam_id))
+
 print("DONE!")
