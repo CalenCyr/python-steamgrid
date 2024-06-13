@@ -1,8 +1,8 @@
 # python-steamgridddy
 
-Forked from: https://github.com/ZebcoWeb/python-steamgriddb.
+Forked from: https://github.com/ZebcoWeb/python-steamgriddb. Core bits inspired by https://github.com/boppreh/steamgrid.
 
-This program's main aim is to fixup Steam artwork for common use cases. The most common issue is the horrid "cover art" for 600x900 capsule covers on Steam Deck (SteamOS v3) that are nothing more than the old wide banner shrunk with a blurred background. In due time, I want to add some more functionality, but that is the main aim.
+This program's main aim is to fixup Steam artwork for common use cases. The most common issue is the horrid "cover art" for 600x900 capsule covers on Steam Deck (SteamOS v3) that are nothing more than the old wide banner shrunk with a blurred background. In due time, I want to add some more functionality, but that is the main aim. This is meant to ideally be a quick fixer utility. For a proper artwork manager, please see the desktop application https://github.com/Tormak9970/Steam-Art-Manager.
 
 Thank you to ZebcoWeb for the API code for SteamGridDB.
 
