@@ -5,12 +5,6 @@ import requests
 import vdf
 import xmltodict
 
-# URL to get the game list from the SteamId64.
-profile_permalink_format = "http://steamcommunity.com/profiles/%v/games?xml=1"
-
-# Used to convert between SteamId32 and SteamId64.
-id_conversion_constant = "0x110000100000000"
-
 def get_steam_installation():
     # Check if the STEAM environment variable is set
     steam_path = os.getenv("STEAM")
@@ -156,7 +150,24 @@ def get_all_games():
     return games
 
 def fetch_and_parse_games_xml(profile_id):
-    """Fetch the games XML from Steam community profile and parse it to JSON."""
+    """
+    Fetch the games XML from Steam community profile and parse it to JSON.
+    Think about replacing this with Steam API later or as a backup (would likely require dev API key)
+
+    Return data example:
+        gamesList
+            steamID64 (Steam ID)
+            SteamID: (public username)
+            games (object)
+                game (list)
+                    appId (Steam App ID)
+                    name (Full name)
+                    logo (Main cover art, capsule image likely)
+                    hoursLast2Weeks
+                    hoursOnRecord
+                    statsLink
+                    globalStatsLink
+    """
     url = f"https://steamcommunity.com/profiles/{profile_id}/games?xml=1"
     
     try:
