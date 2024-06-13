@@ -1,7 +1,9 @@
 import json
 import os
 import platform
+import requests
 import vdf
+import xmltodict
 
 # URL to get the game list from the SteamId64.
 profile_permalink_format = "http://steamcommunity.com/profiles/%v/games?xml=1"
@@ -152,3 +154,21 @@ def get_all_games():
             games.append({'name': name, 'appid': appid})
 
     return games
+
+def fetch_and_parse_games_xml(profile_id):
+    """Fetch the games XML from Steam community profile and parse it to JSON."""
+    url = f"https://steamcommunity.com/profiles/{profile_id}/games?xml=1"
+    
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        raise SystemExit(f"Error fetching data from Steam: {e}")
+    
+    try:
+        data_dict = xmltodict.parse(response.content)
+    except Exception as e:
+        raise SystemExit(f"Error parsing XML data: {e}")
+    
+    json_data = json.dumps(data_dict, indent=4)
+    return json_data
