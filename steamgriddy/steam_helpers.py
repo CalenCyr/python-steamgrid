@@ -2,6 +2,12 @@ import os
 import platform
 import vdf
 
+# URL to get the game list from the SteamId64.
+profile_permalink_format = "http://steamcommunity.com/profiles/%v/games?xml=1"
+
+# Used to convert between SteamId32 and SteamId64.
+const id_conversion_constant = "0x110000100000000"
+
 def get_steam_installation():
     # Check if the STEAM environment variable is set
     steam_path = os.getenv("STEAM")
@@ -50,3 +56,69 @@ def get_steam_users():
         users.append(user)
     
     return users
+
+def get_profile(user_id):
+    """Retrieve the Steam profile information for a given user by parsing the localconfig.vdf file."""
+    steam_path = get_steam_installation()
+    user_data_path = os.path.join(steam_path, "userdata", str(user_id), "config", "localconfig.vdf")
+
+    if not os.path.exists(user_data_path):
+        raise FileNotFoundError(f"localconfig.vdf not found at {user_data_path}")
+
+    try:
+        with open(user_data_path, 'r', encoding='utf-8') as f:
+            user_data = vdf.load(f)
+    except Exception as e:
+        raise IOError(f"Failed to read localconfig.vdf: {e}")
+
+    profile_data = user_data.get('UserLocalConfigStore', {}).get('friends', {}).get('PersonaName', None)
+    
+    if not profile_data:
+        raise ValueError("Profile data not found in localconfig.vdf")
+
+    return profile_data
+
+def get_installed_games():
+    """Retrieve a list of installed Steam games by parsing appmanifest_*.acf files."""
+    library_folders = get_library_folders()
+    games = []
+
+    for folder in library_folders:
+        for file_name in os.listdir(folder):
+            if file_name.startswith("appmanifest_") and file_name.endswith(".acf"):
+                appmanifest_path = os.path.join(folder, file_name)
+                try:
+                    with open(appmanifest_path, 'r', encoding='utf-8') as f:
+                        game_data = vdf.load(f)
+                    app_state = game_data.get('AppState', {})
+                    name = app_state.get('name')
+                    appid = app_state.get('appid')
+                    if name and appid:
+                        games.append({'name': name, 'appid': appid})
+                except Exception as e:
+                    print(f"Failed to read {appmanifest_path}: {e}")
+    
+    return games
+
+def get_library_folders():
+    """Retrieve a list of library folders by parsing libraryfolders.vdf."""
+    steam_path = get_steam_installation()
+    library_folders_path = os.path.join(steam_path, "steamapps", "libraryfolders.vdf")
+
+    if not os.path.exists(library_folders_path):
+        raise FileNotFoundError(f"libraryfolders.vdf not found at {library_folders_path}")
+
+    try:
+        with open(library_folders_path, 'r', encoding='utf-8') as f:
+            library_data = vdf.load(f)
+    except Exception as e:
+        raise IOError(f"Failed to read libraryfolders.vdf: {e}")
+
+    library_folders = [os.path.join(steam_path, "steamapps")]
+    additional_folders = library_data.get('libraryfolders', {})
+    
+    for key, value in additional_folders.items():
+        if key.isdigit():
+            path = value.get('path')
+            if path:
+                library_folders.append(os.path.join(path, "steamapps"))
