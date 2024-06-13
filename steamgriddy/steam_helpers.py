@@ -124,3 +124,27 @@ def get_library_folders():
                 library_folders.append(os.path.join(path, "steamapps"))
 
     return library_folders
+
+def get_all_games():
+    """Retrieve a list of all games by parsing config.vdf."""
+    steam_path = get_steam_installation()
+    config_path = os.path.join(steam_path, "config", "config.vdf")
+
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"config.vdf not found at {config_path}")
+
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config_data = vdf.load(f)
+    except Exception as e:
+        raise IOError(f"Failed to read config.vdf: {e}")
+
+    games = []
+    accounts = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('apps', {})
+
+    for appid, app_data in accounts.items():
+        name = app_data.get('name')
+        if name:
+            games.append({'name': name, 'appid': appid})
+
+    return games
