@@ -1,3 +1,4 @@
+import json
 import os
 import platform
 import vdf
@@ -141,6 +142,7 @@ def get_all_games():
 
     games = []
     accounts = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('apps', {})
+    print(json.dumps(config_data, indent=4))
 
     for appid, app_data in accounts.items():
         name = app_data.get('name')
