@@ -183,3 +183,39 @@ def fetch_and_parse_games_xml(profile_id):
     
     json_data = json.dumps(data_dict, indent=4)
     return json_data
+
+def download_grid_image(image_url, grid_directory):
+    """Download the specific grid image from URL and save to the users's grid directory
+    
+    Parameters
+    -----------
+    image_url: str
+        The image URL
+
+    grid_directory: str
+        The user's grid directory will the image will be placed
+
+    Returns
+    --------
+    None
+    """
+
+    # TODO - write method outside of this to get the user's /grid/ directory
+    # TODO - handle image by basename so it's named as we expect it, along with the right file type (png/jpg)
+    # * `<GAME_ID>.png` (main image for cover used per `/grid/` folder examples)
+    # * `<GAME_ID>_icon.png`
+    # * `<GAME_ID>_hero.png`
+    # * `<GAME_ID>_logo.png`
+
+    # Send a GET request to the image URL
+    response = requests.get(image_url)
+    
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Open a file in binary write mode
+        with open("{grid_directory}/downloaded_image.jpg", "wb") as file:
+            # Write the content of the response to the file
+            file.write(response.content)
+        print("Image downloaded successfully")
+    else:
+        print("Failed to download image, status code:", response.status_code)
