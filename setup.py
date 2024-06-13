@@ -5,17 +5,17 @@ with open("README.md", "r") as fh:
 
 
 setuptools.setup(
-    name="python-steamgriddb",
+    name="python-steamgriddy",
     version="1.0.5",
-    author="Zebco",
-    author_email="zebco1382@gmail.com",
-    description="A Python wrapper for SteamGridDB's API",
+    author="Michael DeGuzis",
+    author_email="mdeguzis@gmail.com",
+    description="Update,fix, and replace your games Steam artwork.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/ZebcoWeb/python-steamgriddb",
+    url="https://github.com/mdeguzis/python-steamgriddy",
     packages=setuptools.find_packages(),
     license="MIT",
-    keywords=['steamgriddb', 'steamgrid', 'steam', 'grid', 'db', 'api', 'wrapper'],
+    keywords=['steamgriddb', 'steamgrid', 'steamgriddy', 'steam', 'grid', 'db', 'api', 'wrapper'],
     install_requires=['requests'],
     classifiers=(
         "Programming Language :: Python :: 3",

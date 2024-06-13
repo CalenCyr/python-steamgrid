@@ -1,19 +1,29 @@
-# python-steamgriddb
-A Python API wrapper for SteamGridDB.com
+# python-steamgridddy
 
-[![PyPI](https://img.shields.io/pypi/v/python-steamgriddb?style=for-the-badge)](https://pypi.python.org/pypi/python-steamgriddb)
+Forked from: https://github.com/ZebcoWeb/python-steamgriddb.
+
+This program's main aim is to fixup Steam artwork for common use cases. The most common issue is the horrid "cover art" for 600x900 capsule covers on Steam Deck (SteamOS v3) that are nothing more than the old wide banner shrunk with a blurred background. In due time, I want to add some more functionality, but that is the main aim.
+
+Thank you to ZebcoWeb for the API code for SteamGridDB.
+
+[![PyPI](https://img.shields.io/pypi/v/python-steamgriddy?style=for-the-badge)](https://pypi.python.org/pypi/python-steamgriddy)
 ![APM](https://img.shields.io/apm/l/github?style=for-the-badge)
 
 ### Installation
 ```shell
-pip install -U python-steamgriddb
+pip install -U python-steamgriddy
 ```
 or
 ```shell
-pip install -U git+https://github.com/ZebcoWeb/python-steamgriddb.git
+pip install -U git+https://github.com/ZebcoWeb/python-steamgriddy.git
 ```
 
-## Getting Started
+## Setup and configuration 
+
+TODO....
+
+## API
+
 #### Get your API key:
 [You can generate an API key on your user preferences page.](https://www.steamgriddb.com/profile/preferences)
 
@@ -93,10 +103,3 @@ grid.delete()
 sgdb.delete_grid([230227])
 ```
 
-### Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=ZebcoWeb/python-steamgriddb&type=Date)](https://star-history.com/#ZebcoWeb/python-steamgriddb&Date)
-
-### Donate address:
-
-**BTC:** *bc1q8ngvcph2mwtlza8w452dxcjc08wgqa0pdnmndz*
