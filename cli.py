@@ -4,6 +4,7 @@ import os
 import json
 
 from steamgriddy import SteamGridDB
+from steamgriddy import steam_helpers
 
 # TODO
 #   Add args
@@ -32,4 +33,8 @@ game_data = sgdb.get_game_by_steam_appid(207650)
 print(json.dumps(game_data.to_json(), indent=4))
 
 # Get games in users library to interate through
+users = steam_helpers.get_steam_users()
+if len(users) > 1:
+    exit("Multiple Steam users found on this system, please set --steam-user <NAME>")
 
+print(users)
