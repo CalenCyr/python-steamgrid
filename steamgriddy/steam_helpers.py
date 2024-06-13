@@ -126,27 +126,40 @@ def get_library_folders():
 
     return library_folders
 
-def get_all_games():
-    """Retrieve a list of all games by parsing config.vdf."""
-    steam_path = get_steam_installation()
-    config_path = os.path.join(steam_path, "config", "config.vdf")
-
-    if not os.path.exists(config_path):
-        raise FileNotFoundError(f"config.vdf not found at {config_path}")
-
+def get_games_from_vdf(vdf_path):
+    """Parse a VDF file to retrieve game information."""
     try:
-        with open(config_path, 'r', encoding='utf-8') as f:
-            config_data = vdf.load(f)
+        with open(vdf_path, 'r', encoding='utf-8') as f:
+            data = vdf.load(f)
     except Exception as e:
-        raise IOError(f"Failed to read config.vdf: {e}")
+        raise IOError(f"Failed to read {vdf_path}: {e}")
 
     games = []
-    accounts = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('apps', {})
-    print(json.dumps(config_data, indent=4))
-
-    for appid, app_data in accounts.items():
+    apps = data.get('UserLocalConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('apps', {})
+    
+    for appid, app_data in apps.items():
         name = app_data.get('name')
         if name:
             games.append({'name': name, 'appid': appid})
-
+    
     return games
+
+def get_all_games():
+    """Retrieve a list of all games by parsing sharedconfig.vdf and localconfig.vdf for each user."""
+    steam_path = get_steam_installation()
+    users = get_steam_users()
+    all_games = []
+
+    for user in users:
+        sharedconfig_path = os.path.join(steam_path, "userdata", user, "7", "remote", "sharedconfig.vdf")
+        localconfig_path = os.path.join(steam_path, "userdata", user, "config", "localconfig.vdf")
+
+        if os.path.exists(sharedconfig_path):
+            all_games.extend(get_games_from_vdf(sharedconfig_path))
+        if os.path.exists(localconfig_path):
+            all_games.extend(get_games_from_vdf(localconfig_path))
+
+    # Remove duplicates
+    unique_games = {game['appid']: game for game in all_games}.values()
+    
+    return list(unique_games)
