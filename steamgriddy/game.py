@@ -1,6 +1,6 @@
 """
 The MIT License (MIT)
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-present Rapptz, DeGuzis
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
 to deal in the Software without restriction, including without limitation
@@ -48,7 +48,7 @@ class Game:
     name: :class:`str`
         The name of the game.
     id: :class:`int`
-        The game's ID.
+        The game's ID from steamgriddb.com.
     types: List[:class:`str`]
         List of game types.
     verified: :class:`bool`

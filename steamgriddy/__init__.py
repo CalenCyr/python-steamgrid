@@ -1,6 +1,6 @@
 """
 The MIT License (MIT)
-Copyright (c) 2015-present Rapptz
+Copyright (c) 2015-present Rapptz,DeGuzis
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
 to deal in the Software without restriction, including without limitation
@@ -18,7 +18,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from .steamgrid import *
+from .steamgriddy import *
 from .enums import *
 from .asset import *
 from .game import *

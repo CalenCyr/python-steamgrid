@@ -1,6 +1,8 @@
 #!/bin/python3
 
 import os
+import json
+
 from steamgriddy import SteamGridDB
 
 # TODO
@@ -12,12 +14,22 @@ from steamgriddy import SteamGridDB
 #       data collection for current titles
 
 # TESTING ONLY
-if not os.envron["STEAM_API_KEY"]:
+border = '=' * 80
+try:
+    sgdb = SteamGridDB(os.environ["STEAM_API_KEY"])
+except KeyError:
     exit("Please set your Steam API key to the env var 'STEAM_API_KEY'")
-sgdb = SteamGridDB(os.envron["STEAM_API_KEY"])
 
 # Get game data
-game_data = sgdb.search_game('A Virus Named TOM')
+print(f"\n{border}")
+game_search_results = sgdb.search_game('A Virus Named TOM')
+for game in game_search_results:
+    print(json.dumps(game.to_json(), indent=4))
 
-# Print shit
-print(game_data)
+# By game ID
+print(f"\n{border}")
+game_data = sgdb.get_game_by_steam_appid(207650)
+print(json.dumps(game_data.to_json(), indent=4))
+
+# Get games in users library to interate through
+

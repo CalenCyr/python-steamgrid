@@ -13,6 +13,9 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/mdeguzis/python-steamgriddy",
+    install_requires = [
+        'requests>=2.28.1'
+    ]
     packages=setuptools.find_packages(),
     license="MIT",
     keywords=['steamgriddb', 'steamgrid', 'steamgriddy', 'steam', 'grid', 'db', 'api', 'wrapper'],
