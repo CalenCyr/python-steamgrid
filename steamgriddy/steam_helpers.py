@@ -28,3 +28,24 @@ def get_steam_installation():
     # If no installation path is found
     raise FileNotFoundError("Could not find Steam installation")
 
+def get_steam_users():
+    """Retrieve a list of Steam users by parsing the config.vdf file."""
+    steam_path = get_steam_installation()
+    config_path = os.path.join(steam_path, "config", "config.vdf")
+
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"config.vdf not found at {config_path}")
+
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config_data = vdf.load(f)
+    except Exception as e:
+        raise IOError(f"Failed to read config.vdf: {e}")
+
+    users = []
+    accounts = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('Accounts', {})
+    
+    for user, data in accounts.items():
+        users.append(user)
+    
+    return users
