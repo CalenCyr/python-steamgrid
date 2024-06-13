@@ -54,6 +54,7 @@ print(steam_helpers.get_library_folders())
 #    steam_id = user['steam_id']
 #    print(steam_helpers.fetch_and_parse_games_xml(steam_id))
 
+# SteamGridDB API V2 docs: https://www.steamgriddb.com/api/v2
 print("Testing grid stuff")
 grids = []
 grids = sgdb.get_grids_by_gameid([game_data_json["id"]])
