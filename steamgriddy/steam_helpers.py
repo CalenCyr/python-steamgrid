@@ -37,7 +37,7 @@ def get_steam_installation():
     raise FileNotFoundError("Could not find Steam installation")
 
 def get_steam_users():
-    """Retrieve a list of Steam users by parsing the config.vdf file."""
+    """Retrieve Steam user names and IDs by parsing config.vdf."""
     steam_path = get_steam_installation()
     config_path = os.path.join(steam_path, "config", "config.vdf")
 
@@ -51,10 +51,12 @@ def get_steam_users():
         raise IOError(f"Failed to read config.vdf: {e}")
 
     users = []
-    accounts = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('Accounts', {})
+    user_data = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('Users', {})
     
-    for user, data in accounts.items():
-        users.append(user)
+    for steam_id, data in user_data.items():
+        user_name = data.get('PersonaName')
+        if user_name:
+            users.append({'user_name': user_name, 'steam_id': steam_id})
     
     return users
 
