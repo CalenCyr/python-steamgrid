@@ -69,6 +69,9 @@ from steamgrid import StyleType, PlatformType, MimeType, ImageType
 # Get grids list without filter
 grids = sgdb.get_grids_by_gameid([1234])
 
+# Get grids with a specific demension (e.g. 600x900 cover capsules)
+grids = sgdb.get_grids_by_gameid(game_ids=[1234], dimensions=["600x900"])
+
 # Get grids list by filter (Multiple filters are allowed)
 grids = sgdb.get_grids_by_gameid(game_ids=[1234], styles=[StyleType.Alternate], mimes=[MimeType.PNG], types=[ImageType.Static], is_nsfw=True)
 
