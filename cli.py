@@ -21,6 +21,10 @@ if __name__ == '__main__':
             action='store_true',
             help="Update capsule cover art only if missing."
     )
+    aparser.add_argument('-f', '--force',
+            action='store_true',
+            help="Force download images for all games/types"
+    )
     aparser.add_argument('-su', '--steam-user', 
             action='store',
             help="Required only if more than one user exist on your system."
@@ -87,23 +91,24 @@ if __name__ == '__main__':
         game_name = this_game["name"]
         game_logo = this_game.get("logo", "")
 
+        ########################
         # TESTING ONLY
+        ########################
         #if game_name != "A Virus Named TOM":
-        #    print(f"[TESING] Skipping {game_name} for testing...")
+        #    #print(f"[TESING] Skipping {game_name} for testing...")
         #    continue
+        #
+        #if game_name != "A Hat in Time":
+        #    continue
+        ########################
 
         print(f"\nProcessing game: {game_name} (AppID: {game_appid}) ({count}/{total_games})")
 
         # Check if the 600x900 capsule cover image is a poor auto-conversion of the
         # old Big Picture wide banner using OCR
         # This image essentially is the wide banner shrunk down with a blurred background 
-        #steam_librarycache_dir
-        #steam_grid_dir
         header_image = os.path.join(steam_librarycache_dir, f"{game_appid}_header.jpg")
         capsule_image = os.path.join(steam_librarycache_dir, f"{game_appid}_library_600x900.jpg")
-        print(f"Checking if {header_image} exists inside of {capsule_image}")
-        missing_cover_art = ocr.check_image_contains_template(capsule_image, header_image)
-
 
         # TODO - download all cover art and process each style from SteamGridDB, not
         #        just the capsule cover art
@@ -120,6 +125,9 @@ if __name__ == '__main__':
         if not grids:
             print(f"Game grid data not found for {game_name} ({game_appid})")
             continue
+
+        print(f"Checking if {header_image} exists inside of {capsule_image}")
+        missing_cover_art = ocr.check_image_contains_template(capsule_image, header_image)
 
         # Process grid results
         for grid in grids:
@@ -143,12 +151,11 @@ if __name__ == '__main__':
             # Only download :
             #   * User wants to fix missing cover art
             #   * User does not* have args.only_missing set
-            if (missing_cover_art and args.only_missing) or not args.only_missing:
+            if missing_cover_art or args.force:
                 print(f"Downloading 600x900 capsule cover image: {grid_image_url} as {grid_image_newfile}")
                 steam_helpers.download_grid_image(grid_image_newfile, grid_image_url, steam_grid_dir)
             else:
                 print("Skipping capsule cover art download: Artwork not missing or --only-missing specified")
-
 
             # Need backoff mechanism for rate limiting?
 

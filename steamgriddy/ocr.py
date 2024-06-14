@@ -41,7 +41,8 @@ def detect_blurred_background(image_path, blur_threshold=100):
     
     # Determine if the background is blurred
     is_blurred = laplacian_var < blur_threshold
-    
+
+    return is_blurred
 
 def check_image_contains_template(source_path, template_path, threshold=0.5):
     # Read the source image and the template image
@@ -50,15 +51,16 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
     
     # Check if images were loaded successfully
     if source_img is None or template_img is None:
-        raise FileNotFoundError("Source or template image not found.")
+        # Return true to skip including this as a possible match
+        print("Source or template image not found. Skipping")
+        return False
 
     # To avoid false positives, check if image is blurred
     # This is how the poor / improper capsules are made (wide background shrunk, blurred background)
     blurred = detect_blurred_background(source_path, blur_threshold=100)
-    #print(f"Is image blurred?: {blurred}")
-    if not blurred[0]:
+    if not blurred:
         print("Image we are checking is not blurred as expected, skipping")
-        return False, "", "", ""
+        return False
 
     # Check if template image is large than source image
     # Some "600x900" images Valve stores are not actually 600x900
