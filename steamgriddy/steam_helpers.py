@@ -5,6 +5,8 @@ import requests
 import vdf
 import xmltodict
 
+from bs4 import BeautifulSoup
+
 def get_steam_installation():
     # Check if the STEAM environment variable is set
     steam_path = os.getenv("STEAM")
@@ -56,6 +58,26 @@ def get_steam_users():
     
     return users
 
+def get_steam_profile_name(steam_id):
+
+    # Construct the URL for the Steam profile page
+    url = f'https://steamcommunity.com/profiles/{steam_id}'
+
+    # Send a request to the URL
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse the HTML content of the page
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # Find the profile name using the appropriate HTML element and class
+        profile_name_element = soup.find('span', class_='actual_persona_name')
+
+        # Extract the text from the HTML element
+        if profile_name_element:
+            return profile_name_element.get_text(strip=True)
+
 def get_steam_user_details(username):
     """Retrieve Steam user details parsing config.vdf."""
     steam_path = get_steam_installation()
@@ -73,6 +95,9 @@ def get_steam_user_details(username):
     user_data = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('Accounts', {})
     for steam_username, data in user_data.items():
         steam_id = data.get('SteamID')
+
+        # Add in profile name (which will match up later with localconfig.vdf)
+
         if steam_username == username:
             return {'username': steam_username, 'steam_id': steam_id}
 
@@ -118,6 +143,31 @@ def get_installed_games():
                     print(f"Failed to read {appmanifest_path}: {e}")
     
     return games
+
+def get_librarycache_folder():
+    """ Sets the target path to the librarycache folder """
+    steam_path = get_steam_installation()
+    return os.path.join(steam_path, "appcache", "librarycache")
+
+def get_grid_folder(steam_user_id, steam_profile_name):
+    """ Sets the target path to the grid folder """
+    steam_path = get_steam_installation()
+    steam_userdata = os.path.join(steam_path, "userdata")
+
+    for folder in os.listdir(steam_userdata):
+        # Skip anonymous folder
+        if folder == "anonymous":
+            continue
+        localvdf = os.path.join(steam_path, "userdata", folder, "config", "localconfig.vdf")
+        if os.path.exists(localvdf):
+            with open(localvdf, 'r', encoding='utf-8') as f:
+                config_data = vdf.load(f)
+                # Does the request profile name match the local config?
+                profile_in_vdf = config_data.get('UserLocalConfigStore', {}).get('friends', {}).get('PersonaName', {})
+                if not profile_in_vdf:
+                    exit("Failed to find Steam profile name in localconfig.vdf!")
+                if profile_in_vdf == steam_profile_name:
+                    return os.path.join(steam_path, "userdata", folder, "config", "grid")
 
 def get_library_folders():
     """Retrieve a list of library folders by parsing libraryfolders.vdf."""
@@ -210,7 +260,7 @@ def fetch_and_parse_games_xml(profile_id):
     #json_data = json.dumps(data_dict, indent=4)
     return data_dict
 
-def download_grid_image(image_url, grid_directory):
+def download_grid_image(target_file, image_url, grid_directory):
     """Download the specific grid image from URL and save to the users's grid directory
     
     Parameters
@@ -235,13 +285,14 @@ def download_grid_image(image_url, grid_directory):
 
     # Send a GET request to the image URL
     response = requests.get(image_url)
+    target_location = f"{grid_directory}/{target_file}"
     
     # Check if the request was successful
     if response.status_code == 200:
         # Open a file in binary write mode
-        with open("{grid_directory}/downloaded_image.jpg", "wb") as file:
+        with open(target_location, "wb") as file:
             # Write the content of the response to the file
             file.write(response.content)
-        print("Image downloaded successfully")
+        print(f"Image downloaded successfully to: {target_location}")
     else:
         print("Failed to download image, status code:", response.status_code)

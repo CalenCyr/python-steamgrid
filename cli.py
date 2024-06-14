@@ -40,13 +40,23 @@ if __name__ == '__main__':
         user_details = steam_helpers.get_steam_user_details(args.steam_user)
     if not user_details:
         exit("Failed to find Steam user details!")
+    user_id = user_details['username']
+    steam_id = user_details['steam_id']
+    profile_name = steam_helpers.get_steam_profile_name(steam_id)
+    if not profile_name:
+        exit("Could not fetch profile name!")
 
     # Get library folders
     print("Attempting to get library folders from VDF")
-    if not steam_helpers.get_library_folders():
+    steam_library_folders = steam_helpers.get_library_folders()
+    if not steam_library_folders:
         exit("Failed to find library folders!")
-    user_id = user_details['username']
-    steam_id = user_details['steam_id']
+
+    steam_librarycache_dir = steam_helpers.get_librarycache_folder()
+    steam_grid_dir = steam_helpers.get_grid_folder(steam_id, profile_name)
+
+    print(f"Steam libcache dir: {steam_librarycache_dir}")
+    print(f"Steam grid dir: {steam_grid_dir}")
 
     # Parse games from profile
     # In the future, see if using the Steam API is more future proof
@@ -69,6 +79,9 @@ if __name__ == '__main__':
         game_name = this_game["name"]
         game_logo = this_game.get("logo", "")
         print(f"Processing game: {game_name} (AppID: {game_appid})")
+
+        # Does {gamm_appid} exist in librarycache and/or the grid directory?
+        # TODO
 
         # https://www.steamgriddb.com/api/v2
         # {'id': 3120, 'name': 'A Hat in Time', 'release_date': 1507237200, 'types': ['steam', 'gog'], 'verified': True}
@@ -95,6 +108,11 @@ if __name__ == '__main__':
             # For automation, take the first result
             # Users can always use Decky Loader "steamgrid DB" plugin to adjust later
             print(f"Downloading 600x900 capsule cover image: {grid_image_url} as {grid_image_newfile}")
+            steam_helpers.download_grid_image(grid_image_newfile, grid_image_url, "/tmp")
+
+            # Need backoff mechanism for rate limiting?
+
+            exit(0)
 
             # Stop processing rest of grids
             break
