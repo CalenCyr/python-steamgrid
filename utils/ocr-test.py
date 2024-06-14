@@ -4,6 +4,43 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+def detect_blurred_background(image_path, blur_threshold=100):
+    # Load the image
+    image = cv2.imread(image_path)
+    if image is None:
+        raise FileNotFoundError("Image not found.")
+    
+    # Convert to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    
+    # Use a simple segmentation approach (e.g., thresholding) to separate foreground and background
+    _, binary = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV)
+    
+    # Apply morphological operations to clean up the segmentation
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+    
+    # Find contours of the segmented regions
+    contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    # Create a mask for the background
+    background_mask = np.ones_like(gray) * 255
+    cv2.drawContours(background_mask, contours, -1, (0), thickness=cv2.FILLED)
+    
+    # Extract the background region using the mask
+    background = cv2.bitwise_and(gray, gray, mask=background_mask)
+    
+    # Compute the Laplacian of the background
+    laplacian = cv2.Laplacian(background, cv2.CV_64F)
+    
+    # Compute the variance of the Laplacian
+    laplacian_var = laplacian.var()
+    
+    # Determine if the background is blurred
+    is_blurred = laplacian_var < blur_threshold
+    
+    return is_blurred, laplacian_var, background_mask, laplacian
+
 def check_image_contains_template(source_path, template_path, threshold=0.5):
     # Read the source image and the template image
     source_img = cv2.imread(source_path, cv2.IMREAD_GRAYSCALE)
