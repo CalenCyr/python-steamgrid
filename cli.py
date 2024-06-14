@@ -16,6 +16,10 @@ if __name__ == '__main__':
         formatter_class=lambda prog: argparse.RawTextHelpFormatter(
             prog,max_help_position=80,width=100)
     )
+    aparser.add_argument('-o', '--only-missing', 
+            action='store_true',
+            help="Update capsule cover art only if missing."
+    )
     aparser.add_argument('-su', '--steam-user', 
             action='store',
             help="Required only if more than one user exist on your system."
@@ -83,9 +87,9 @@ if __name__ == '__main__':
         game_logo = this_game.get("logo", "")
 
         # TESTING ONLY
-        #if game_name != "A Virus Named TOM":
-        #    print(f"[TESING] Skipping {game_name} for testing...")
-        #    continue
+        if game_name != "A Virus Named TOM":
+            print(f"[TESING] Skipping {game_name} for testing...")
+            continue
 
         print(f"\nProcessing game: {game_name} (AppID: {game_appid}) ({count}/{total_games})")
 

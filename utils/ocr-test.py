@@ -1,8 +1,12 @@
 #!/bin/python
 
+import cv2
+import pytesseract
+from PIL import Image
+
 # Load the images
-large_image_path = 'large_image.jpg'
-small_image_path = 'small_image.jpg'
+large_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_header.jpg'
+small_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_library_600x900.jpg'
 
 large_image = cv2.imread(large_image_path)
 small_image = cv2.imread(small_image_path)
