@@ -53,8 +53,9 @@ def get_steam_users():
     
     for steam_username, data in user_data.items():
         steam_id = data.get('SteamID')
+        profile_name = get_steam_profile_name(steam_id)
         if steam_username:
-            users.append({'username': steam_username, 'steam_id': steam_id})
+            users.append({'username': steam_username, 'steam_id': steam_id, 'steam_profile_name': profile_name})
     
     return users
 
@@ -95,11 +96,9 @@ def get_steam_user_details(username):
     user_data = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('Accounts', {})
     for steam_username, data in user_data.items():
         steam_id = data.get('SteamID')
-
-        # Add in profile name (which will match up later with localconfig.vdf)
-
-        if steam_username == username:
-            return {'username': steam_username, 'steam_id': steam_id}
+        profile_name = get_steam_profile_name(steam_id)
+        if steam_username:
+            return {'username': steam_username, 'steam_id': steam_id, 'steam_profile_name': profile_name}
 
 def get_profile(user_id):
     """Retrieve the Steam profile information for a given user by parsing the localconfig.vdf file."""

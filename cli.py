@@ -42,7 +42,7 @@ if __name__ == '__main__':
         exit("Failed to find Steam user details!")
     user_id = user_details['username']
     steam_id = user_details['steam_id']
-    profile_name = steam_helpers.get_steam_profile_name(steam_id)
+    profile_name = user_details['steam_profile_name']
     if not profile_name:
         exit("Could not fetch profile name!")
 
