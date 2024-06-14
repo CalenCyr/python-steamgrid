@@ -14,8 +14,18 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
         raise FileNotFoundError("Source or template image not found.")
 
     # Check if template image is large than source image
+    # Some "600x900" images Valve stores are not actually 600x900
+    # To work around this, scale up the source image if it has that text in it
+    # Because of this, the threshold should be more strict
     if template_img.shape[0] > source_img.shape[0] or template_img.shape[1] > source_img.shape[1]:
-        raise ValueError(f"Template image is larger than the source image.\nTemplate: {template_img.shape}\nSource: {source_img.shape}")
+        msg = (f"Template image is larger than the source image.\nTemplate: {template_img.shape}\nSource: {source_img.shape}")
+        if "600x900" in source_path:
+            print(msg)
+            print("Resizing to 600x900 per filename")
+            threshold=2285905925
+            source_img = cv2.resize(source_img, (600, 900), interpolation=cv2.INTER_AREA)
+        else:
+            raise ValueError(msg)
     
     # Perform template matching using different methods
     methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR', 'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
@@ -40,6 +50,7 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
     best_match_val, best_match_loc = results[best_method]
     
     # Check if the best match exceeds the threshold
+    print(f"Using threshold of: {threshold}")
     if best_match_val >= threshold if 'SQDIFF' not in best_method else best_match_val <= threshold:
         match = True
     else:
