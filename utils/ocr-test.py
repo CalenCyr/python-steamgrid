@@ -63,6 +63,14 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
             source_img = cv2.resize(source_img, (600, 900), interpolation=cv2.INTER_AREA)
         else:
             raise ValueError(msg)
+
+    # To avoid false positives, check if image is blurred
+    # This is how the poor / improper capsules are made (wide background shrunk, blurred background)
+    blurred = detect_blurred_background(source_path, blur_threshold=100)
+    #print(f"Is image blurred?: {blurred}")
+    if not blurred[0]:
+        print("Image we are checking is not blurred, skipping")
+        return False, "", "", ""
     
     # Perform template matching using different methods
     methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR', 'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
