@@ -44,8 +44,8 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
     return match, best_match_loc, best_match_val, best_method
 
 # Paths to the images (you can modify these paths accordingly)
-source_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_header.jpg'
-template_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_library_600x900.jpg'
+template_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_header.jpg'
+source_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_library_600x900.jpg'
 
 # Perform the check
 match, location, score, method = check_image_contains_template(source_image_path, template_image_path)
