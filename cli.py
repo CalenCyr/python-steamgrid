@@ -71,17 +71,31 @@ if __name__ == '__main__':
     print(f"Fetching {user_id}'s Steam games")
     games = steam_helpers.fetch_and_parse_games_xml(steam_id)
 
+    count = 0
+    total_games = len(games)
     if not games:
         exit("Error fetching games!")
     sorted_games = sorted(games, key=lambda item: item['name'], reverse=False)
     for this_game in sorted_games:
+        count += 1
         game_appid = this_game["appID"]
         game_name = this_game["name"]
         game_logo = this_game.get("logo", "")
-        print(f"Processing game: {game_name} (AppID: {game_appid})")
+
+        # TESTING ONLY
+        #if game_name != "A Virus Named TOM":
+        #    print(f"[TESING] Skipping {game_name} for testing...")
+        #    continue
+
+        print(f"\nProcessing game: {game_name} (AppID: {game_appid}) ({count}/{total_games})")
 
         # Does {gamm_appid} exist in librarycache and/or the grid directory?
-        # TODO
+        # This doesn't solve the problem of if the cover art is the improver wide art
+        # with the blurred background. OCR image magic?
+        # For now, just download the cover/other to the /grid/ dir, which will override
+        # the librarycache
+        #steam_librarycache_dir
+        #steam_grid_dir
 
         # https://www.steamgriddb.com/api/v2
         # {'id': 3120, 'name': 'A Hat in Time', 'release_date': 1507237200, 'types': ['steam', 'gog'], 'verified': True}
@@ -92,14 +106,20 @@ if __name__ == '__main__':
             print(f"Game grid data not found for {game_name} ({game_appid})")
             continue
 
-        # TODO
-        # Logic to check library_cache vs /grid/ folder
-        # Add arg to download/update --only-missing, --all-grids
+        if not grids:
+            print(f"Game grid data not found for {game_name} ({game_appid})")
+            continue
+
+        # Process grid results
         for grid in grids:
             grid_json = grid.to_json()
             grid_image_url = grid_json["url"]
             grid_image_filetype= os.path.basename(grid_image_url).split('.')[1]
-            grid_image_newfile = f"{game_appid}.{grid_image_filetype}"
+
+            # TODO - this part needs to be dynamic base don image type
+            #        start with cover/capsule 600x900. For some reason that
+            #        needs a "p" on the end (portrait?)
+            grid_image_newfile = f"{game_appid}p.{grid_image_filetype}"
 
             # DEBUG
             # print(json.dumps(grid_json))
@@ -108,11 +128,9 @@ if __name__ == '__main__':
             # For automation, take the first result
             # Users can always use Decky Loader "steamgrid DB" plugin to adjust later
             print(f"Downloading 600x900 capsule cover image: {grid_image_url} as {grid_image_newfile}")
-            steam_helpers.download_grid_image(grid_image_newfile, grid_image_url, "/tmp")
+            steam_helpers.download_grid_image(grid_image_newfile, grid_image_url, steam_grid_dir)
 
             # Need backoff mechanism for rate limiting?
-
-            exit(0)
 
             # Stop processing rest of grids
             break
