@@ -31,6 +31,23 @@ pip install -U git+https://github.com/ZebcoWeb/python-steamgriddy.git
 
 TODO....
 
+## Future Plans
+
+* Allow user to replace all artwork with manual selection or first result on SteamGridDB
+* Filtering
+  * only missing
+  * No banner/cover/icon/logo
+* Speed improvments (Gotta go fast!)
+  * Batching
+  * Rate limiting (if needed)
+  * Threading
+* Quality of life
+  * Preview/confirmation of changes/diff
+  * Color
+  * Proper logging
+  * Version control for releases
+  * Reduce redundant code 
+
 ## API
 
 #### Get your API key:
