@@ -17,14 +17,9 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
     methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR', 'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
     results = {}
     
-    results = None
     for method in methods:
         method_eval = eval(method)
-        try: 
-            result = cv2.matchTemplate(source_img, template_img, method_eval)
-        except cv2.error as e:
-            print(f"Could not fetch result for method {method}, Skipping. Error was: {e}")
-            continue
+        result = cv2.matchTemplate(source_img, template_img, method_eval)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
         
         if method in ['cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']:
@@ -37,28 +32,20 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
         results[method] = (match_val, match_loc)
     
     # Select the best match based on the highest score (or lowest for SQDIFF methods)
-    if results:
-        best_method = max(results, key=lambda x: results[x][0] if 'SQDIFF' not in x else -results[x][0])
-        best_match_val, best_match_loc = results[best_method]
-        
-        # Check if the best match exceeds the threshold
-        if best_match_val >= threshold if 'SQDIFF' not in best_method else best_match_val <= threshold:
-            return True, best_match_loc, best_match_val, best_method
-
+    best_method = max(results, key=lambda x: results[x][0] if 'SQDIFF' not in x else -results[x][0])
+    best_match_val, best_match_loc = results[best_method]
+    
+    # Check if the best match exceeds the threshold
+    if best_match_val >= threshold if 'SQDIFF' not in best_method else best_match_val <= threshold:
+        match = True
     else:
-        return False, "", "", ""
+        match = False
+    
+    return match, best_match_loc, best_match_val, best_method
 
 # Paths to the images (you can modify these paths accordingly)
-
-# A virus named TOM
-# Should return true
-#template_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_header.jpg'
-#source_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_library_600x900.jpg'
-
-# Hat in time
-# Should return false
-template_image_path = '/home/deck/.steam/steam/appcache/librarycache/253230_header.jpg'
-source_image_path = '/home/deck/.steam/steam/appcache/librarycache/253230_library_600x900.jpg'
+template_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_header.jpg'
+source_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_library_600x900.jpg'
 
 # Perform the check
 match, location, score, method = check_image_contains_template(source_image_path, template_image_path)
