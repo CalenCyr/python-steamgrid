@@ -56,6 +56,26 @@ def get_steam_users():
     
     return users
 
+def get_steam_user_details(username):
+    """Retrieve Steam user details parsing config.vdf."""
+    steam_path = get_steam_installation()
+    config_path = os.path.join(steam_path, "config", "config.vdf")
+
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"config.vdf not found at {config_path}")
+
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config_data = vdf.load(f)
+    except Exception as e:
+        raise IOError(f"Failed to read config.vdf: {e}")
+
+    user_data = config_data.get('InstallConfigStore', {}).get('Software', {}).get('Valve', {}).get('Steam', {}).get('Accounts', {})
+    for steam_username, data in user_data.items():
+        steam_id = data.get('SteamID')
+        if steam_username == username:
+            return {'username': steam_username, 'steam_id': steam_id}
+
 def get_profile(user_id):
     """Retrieve the Steam profile information for a given user by parsing the localconfig.vdf file."""
     steam_path = get_steam_installation()
@@ -175,14 +195,20 @@ def fetch_and_parse_games_xml(profile_id):
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
         raise SystemExit(f"Error fetching data from Steam: {e}")
-    
+
+    #"gamesList": {
+    #    "steamID64": "<STEAM_ID>",
+    #    "steamID": "<STEAM_PROFILE_NAME>",   
+    #    "games": {
+    #        "game": [
+    #            {   
     try:
-        data_dict = xmltodict.parse(response.content)
+        data_dict = xmltodict.parse(response.content)["gamesList"]["games"]["game"]
     except Exception as e:
         raise SystemExit(f"Error parsing XML data: {e}")
     
-    json_data = json.dumps(data_dict, indent=4)
-    return json_data
+    #json_data = json.dumps(data_dict, indent=4)
+    return data_dict
 
 def download_grid_image(image_url, grid_directory):
     """Download the specific grid image from URL and save to the users's grid directory
