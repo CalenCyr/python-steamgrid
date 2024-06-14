@@ -6,6 +6,7 @@ import json
 import time
 
 from steamgriddy import http
+from steamgriddy import ocr
 from steamgriddy import SteamGridDB
 from steamgriddy import steam_helpers
 from steamgriddy import enums
@@ -87,19 +88,25 @@ if __name__ == '__main__':
         game_logo = this_game.get("logo", "")
 
         # TESTING ONLY
-        if game_name != "A Virus Named TOM":
-            print(f"[TESING] Skipping {game_name} for testing...")
-            continue
+        #if game_name != "A Virus Named TOM":
+        #    print(f"[TESING] Skipping {game_name} for testing...")
+        #    continue
 
         print(f"\nProcessing game: {game_name} (AppID: {game_appid}) ({count}/{total_games})")
 
-        # Does {gamm_appid} exist in librarycache and/or the grid directory?
-        # This doesn't solve the problem of if the cover art is the improver wide art
-        # with the blurred background. OCR image magic?
-        # For now, just download the cover/other to the /grid/ dir, which will override
-        # the librarycache
+        # Check if the 600x900 capsule cover image is a poor auto-conversion of the
+        # old Big Picture wide banner using OCR
+        # This image essentially is the wide banner shrunk down with a blurred background 
         #steam_librarycache_dir
         #steam_grid_dir
+        header_image = os.path.join(steam_librarycache_dir, f"{game_appid}_header.jpg")
+        capsule_image = os.path.join(steam_librarycache_dir, f"{game_appid}_library_600x900.jpg")
+        print(f"Checking if {header_image} exists inside of {capsule_image}")
+        missing_cover_art = ocr.check_image_contains_template(capsule_image, header_image)
+
+
+        # TODO - download all cover art and process each style from SteamGridDB, not
+        #        just the capsule cover art
 
         # https://www.steamgriddb.com/api/v2
         # {'id': 3120, 'name': 'A Hat in Time', 'release_date': 1507237200, 'types': ['steam', 'gog'], 'verified': True}
@@ -131,8 +138,17 @@ if __name__ == '__main__':
             # Same image with appropriate name
             # For automation, take the first result
             # Users can always use Decky Loader "steamgrid DB" plugin to adjust later
-            print(f"Downloading 600x900 capsule cover image: {grid_image_url} as {grid_image_newfile}")
-            steam_helpers.download_grid_image(grid_image_newfile, grid_image_url, steam_grid_dir)
+
+            # Cover art handling
+            # Only download :
+            #   * User wants to fix missing cover art
+            #   * User does not* have args.only_missing set
+            if (missing_cover_art and args.only_missing) or not args.only_missing:
+                print(f"Downloading 600x900 capsule cover image: {grid_image_url} as {grid_image_newfile}")
+                steam_helpers.download_grid_image(grid_image_newfile, grid_image_url, steam_grid_dir)
+            else:
+                print("Skipping capsule cover art download: Artwork not missing or --only-missing specified")
+
 
             # Need backoff mechanism for rate limiting?
 
