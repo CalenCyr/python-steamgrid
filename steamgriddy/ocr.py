@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # * The source image would be the one we are checking 
 # * This effectively checks if the cover art is just a shrunk down wide banner with a blurred background
 
-def detect_blurred_background(image_path, blur_threshold=100):
+def detect_blurred_background(image_path, blur_threshold=800):
     # Load the image
     image = cv2.imread(image_path)
     if image is None:
@@ -42,6 +42,7 @@ def detect_blurred_background(image_path, blur_threshold=100):
     # Determine if the background is blurred
     is_blurred = laplacian_var < blur_threshold
 
+    #print(is_blurred, laplacian_var, background_mask, laplacian)
     return is_blurred
 
 def check_image_contains_template(source_path, template_path, threshold=0.5):
@@ -57,7 +58,7 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
 
     # To avoid false positives, check if image is blurred
     # This is how the poor / improper capsules are made (wide background shrunk, blurred background)
-    blurred = detect_blurred_background(source_path, blur_threshold=100)
+    blurred = detect_blurred_background(source_path)
     if not blurred:
         print("Image we are checking is not blurred as expected, skipping")
         return False

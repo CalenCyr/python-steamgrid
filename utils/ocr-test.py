@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-def detect_blurred_background(image_path, blur_threshold=100):
+def detect_blurred_background(image_path, blur_threshold=800):
     # Load the image
     image = cv2.imread(image_path)
     if image is None:
@@ -37,8 +37,10 @@ def detect_blurred_background(image_path, blur_threshold=100):
     laplacian_var = laplacian.var()
     
     # Determine if the background is blurred
+    # A good image (with absolutely no blurring is about a value of 2700 laplacian_var
     is_blurred = laplacian_var < blur_threshold
     
+    print(f"Blurred: {is_blurred}")
     return is_blurred, laplacian_var, background_mask, laplacian
 
 def check_image_contains_template(source_path, template_path, threshold=0.5):
@@ -66,7 +68,7 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
 
     # To avoid false positives, check if image is blurred
     # This is how the poor / improper capsules are made (wide background shrunk, blurred background)
-    blurred = detect_blurred_background(source_path, blur_threshold=100)
+    blurred = detect_blurred_background(source_path)
     #print(f"Is image blurred?: {blurred}")
     if not blurred[0]:
         print("Image we are checking is not blurred, skipping")
@@ -110,10 +112,15 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
 #template_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_header.jpg'
 #source_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_library_600x900.jpg'
 
+# Cryis Wars
+# Should return true
+template_image_path = '/home/deck/.steam/steam/appcache/librarycache/17340_header.jpg'
+source_image_path = '/home/deck/.steam/steam/appcache/librarycache/17340_library_600x900.jpg'
+
 # A Hat in Time
 # Should return false
-template_image_path = '/home/deck/.steam/steam/appcache/librarycache/253230_header.jpg'
-source_image_path = '/home/deck/.steam/steam/appcache/librarycache/253230_library_600x900.jpg'
+#template_image_path = '/home/deck/.steam/steam/appcache/librarycache/253230_header.jpg'
+#source_image_path = '/home/deck/.steam/steam/appcache/librarycache/253230_library_600x900.jpg'
 
 # Perform the check
 match, location, score, method = check_image_contains_template(source_image_path, template_image_path)

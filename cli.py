@@ -81,6 +81,7 @@ if __name__ == '__main__':
     games = steam_helpers.fetch_and_parse_games_xml(steam_id)
 
     count = 0
+    applied_count = 0
     total_games = len(games)
     if not games:
         exit("Error fetching games!")
@@ -95,7 +96,9 @@ if __name__ == '__main__':
         # TESTING ONLY
         ########################
         #if game_name != "A Virus Named TOM":
-        #    #print(f"[TESING] Skipping {game_name} for testing...")
+        #    continue
+        #
+        #if game_name != "Crysis Wars":
         #    continue
         #
         #if game_name != "A Hat in Time":
@@ -154,6 +157,7 @@ if __name__ == '__main__':
             if missing_cover_art or args.force:
                 print(f"Downloading 600x900 capsule cover image: {grid_image_url} as {grid_image_newfile}")
                 steam_helpers.download_grid_image(grid_image_newfile, grid_image_url, steam_grid_dir)
+                applied_count += 1
             else:
                 print("Skipping capsule cover art download: Artwork not missing or --only-missing specified")
 
@@ -162,4 +166,4 @@ if __name__ == '__main__':
             # Stop processing rest of grids
             break
 
-    print("DONE!")
+    print(f"DONE! Applied cover art to {applied_count} games.")
