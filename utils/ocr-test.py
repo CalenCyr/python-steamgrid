@@ -12,6 +12,10 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
     # Check if images were loaded successfully
     if source_img is None or template_img is None:
         raise FileNotFoundError("Source or template image not found.")
+
+    # Check if template image is large than source image
+    if template_img.shape[0] > source_img.shape[0] or template_img.shape[1] > source_img.shape[1]:
+        raise ValueError(f"Template image is larger than the source image.\nTemplate: {template_img.shape}\nSource: {source_img.shape}")
     
     # Perform template matching using different methods
     methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR', 'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
@@ -44,8 +48,16 @@ def check_image_contains_template(source_path, template_path, threshold=0.5):
     return match, best_match_loc, best_match_val, best_method
 
 # Paths to the images (you can modify these paths accordingly)
-template_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_header.jpg'
-source_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_library_600x900.jpg'
+
+# A Virus Named TOM 
+# Should return true
+#template_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_header.jpg'
+#source_image_path = '/home/deck/.steam/steam/appcache/librarycache/207650_library_600x900.jpg'
+
+# A Hat in Time
+# Should return false
+template_image_path = '/home/deck/.steam/steam/appcache/librarycache/253230_header.jpg'
+source_image_path = '/home/deck/.steam/steam/appcache/librarycache/253230_library_600x900.jpg'
 
 # Perform the check
 match, location, score, method = check_image_contains_template(source_image_path, template_image_path)
