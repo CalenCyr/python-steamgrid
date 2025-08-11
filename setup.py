@@ -17,7 +17,7 @@ setuptools.setup(
         'requests>=2.28.1',
         'vdf',
         'xmltodict'
-    ]
+    ],
     packages=setuptools.find_packages(),
     license="MIT",
     keywords=['steamgriddb', 'steamgrid', 'steamgriddy', 'steam', 'grid', 'db', 'api', 'wrapper'],
