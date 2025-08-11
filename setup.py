@@ -21,7 +21,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     license="MIT",
     keywords=['steamgriddb', 'steamgrid', 'steamgriddy', 'steam', 'grid', 'db', 'api', 'wrapper'],
-    install_requires=['requests'],
     classifiers=(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
